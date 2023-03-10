@@ -3,6 +3,7 @@ library vicinity_location_tags;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,12 @@ class VicinityLocationTags {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<dynamic> initUserAgentState(int zoneId) async {
     String userAgent, webViewUserAgent;
-    // Be sure to add this line if `PackageInfo.fromPlatform()` is called before runApp()
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
+      final url = Uri.parse('https://leo.vic-m.co/api/mobile-tags');
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
       String appName = packageInfo.appName;
       String packageName = packageInfo.packageName;
       String version = packageInfo.version;
@@ -33,8 +34,7 @@ class VicinityLocationTags {
       if (location != null) {
         String? address = await _getAddressFromLatLng(location);
         if (address != null) {
-
-          Map data = {
+          Map<String, dynamic> data = {
             "user_agent": "$userAgent $webViewUserAgent",
             "latitude" : location!.latitude,
             "longitude": location!.longitude,
@@ -45,10 +45,22 @@ class VicinityLocationTags {
             "buildNumber":buildNumber,
             "zoneId": zoneId
           };
-          print("Address is $address");
-          return data;
+          final response = await http.post(
+            url,
+            headers: headers,
+            body: jsonEncode(data),
+          );
+          if (response.statusCode == 200) {
+            // Request successful, handle response
+            print(response.body);
+          } else {
+            // Request failed, handle error
+            print(response.statusCode);
+          }
+          // print("Address is $address");
+          // return data;
         } else {
-          Map data = {
+          Map<String, dynamic> data = {
             "user_agent": "$userAgent $webViewUserAgent",
             "latitude" : location!.latitude,
             "longitude": location!.longitude,
@@ -59,11 +71,23 @@ class VicinityLocationTags {
             "buildNumber":buildNumber,
             "zoneId": zoneId
           };
-          print("no address");
-          return data;
+          final response = await http.post(
+            url,
+            headers: headers,
+            body: jsonEncode(data),
+          );
+          if (response.statusCode == 200) {
+            // Request successful, handle response
+            print(response.body);
+          } else {
+            // Request failed, handle error
+            print(response.statusCode);
+          }
+          // print("no address");
+          // return data;
         }
       } else {
-        Map data = {
+        Map<String, dynamic> data = {
           "user_agent": "$userAgent $webViewUserAgent",
           "latitude" :null,
           "longitude": null,
@@ -74,21 +98,20 @@ class VicinityLocationTags {
           "buildNumber":buildNumber,
           "zoneId": zoneId
         };
-        print("no location ");
-        return data;
+        final response = await http.post(
+          url,
+          headers: headers,
+          body: jsonEncode(data),
+        );
+        if (response.statusCode == 200) {
+          // Request successful, handle response
+          print(response.body);
+        } else {
+          // Request failed, handle error
+          print(response.statusCode);
+        }
       }
-      // print('''
-      //     applicationVersion => ${FlutterUserAgent.getProperty('applicationVersion')}
-      //     systemName         => ${FlutterUserAgent.getProperty('systemName')}
-      //     userAgent          => $userAgent
-      //     webViewUserAgent   => $webViewUserAgent
-      //     packageUserAgent   => ${FlutterUserAgent.getProperty('packageUserAgent')}
-      //      ''');
-      //  Map data = {"user_agent": "$userAgent $webViewUserAgent"};
-      // location['user_agent']= "$userAgent $webViewUserAgent";
-      // data.addAll(location);
-      // print(location);
-      // return location;
+    
     } on PlatformException {
       // userAgent = webViewUserAgent = '<error>';
       return [];
