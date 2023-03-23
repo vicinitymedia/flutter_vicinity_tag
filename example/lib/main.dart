@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     initVicinityTags();
 
   }
-//  Platform messages are asynchronous, so we initialize in an async method.
+//  Get use information messages are asynchronous, so we initialize in an async method.
   Future<void> initVicinityTags() async {
     final hasPermission = await _handleLocationPermission();
     WidgetsFlutterBinding.ensureInitialized();
