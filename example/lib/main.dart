@@ -31,16 +31,14 @@ class _MyAppState extends State<MyApp> {
     final hasPermission = await _handleLocationPermission();
     WidgetsFlutterBinding.ensureInitialized();
     if (!hasPermission) return;
-    var platformVersion;
+    var data;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
       int zoneId = 12345;
-     platformVersion =
+      data =
           (await _vicinityLocationTagsPlugin.initUserAgentState(zoneId));
-      print(platformVersion );
-    } on PlatformException {
-      // platformVersion = 'Failed to get platform version.';
+      print(data );
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -109,7 +107,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Vicinity Tags Flutter'),
         ),
-        body: Center(child: Text("user_agent_details : $_platformVersion\n")),
+        body: Center(child: Text("user_agent_details : $data\n")),
       ),
     );
   }

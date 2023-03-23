@@ -52,10 +52,10 @@ class VicinityLocationTags {
           );
           if (response.statusCode == 200) {
             // Request successful, handle response
-            print(response.body);
+            return response.body;
           } else {
             // Request failed, handle error
-            print(response.statusCode);
+            return response.statusCode;
           }
           // print("Address is $address");
           // return data;
@@ -78,10 +78,10 @@ class VicinityLocationTags {
           );
           if (response.statusCode == 200) {
             // Request successful, handle response
-            print(response.body);
+            return response.body;
           } else {
             // Request failed, handle error
-            print(response.statusCode);
+            return response.statusCode;
           }
           // print("no address");
           // return data;
@@ -105,10 +105,10 @@ class VicinityLocationTags {
         );
         if (response.statusCode == 200) {
           // Request successful, handle response
-          print(response.body);
+          return response.body;
         } else {
           // Request failed, handle error
-          print(response.statusCode);
+          return response.statusCode;
         }
       }
     
@@ -132,12 +132,12 @@ class VicinityLocationTags {
             _currentPosition!.latitude, _currentPosition!.longitude);
     if(placemarks!.isNotEmpty){
       Placemark place = placemarks[0];
-      String addre =
+      String address =
           '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-      return addre;
+      return address;
     }
     else{
-      return 'xcv';
+      return ' ';
     }
 
   }
